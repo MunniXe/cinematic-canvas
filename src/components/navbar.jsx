@@ -156,7 +156,7 @@ export default function Navbar({ onSelectMedia, activeTab = 'explore', onNavigat
       <div className="flex items-center gap-2 sm:gap-3 relative" ref={searchRef}>
         <div className="relative">
           <button
-            className="p-1 sm:p-1.5 text-gray-400 hover:text-white transition-colors"
+            className="p-1 sm:p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer"
             onClick={handleSearchClick}
             aria-label="Search TMDB"
           >
@@ -164,7 +164,7 @@ export default function Navbar({ onSelectMedia, activeTab = 'explore', onNavigat
           </button>
 
           {isOpen && (
-            <div className="absolute right-0 top-10 sm:top-11 w-[280px] sm:w-[320px] rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-2xl overflow-hidden z-[100]">
+            <div className="absolute right-0 top-10 sm:top-11 w-[280px] sm:w-[320px] rounded-2xl bg-black/60 backdrop-blur-xl border border-white/15 shadow-2xl ring-1 ring-white/10 overflow-hidden z-[100]">
               <div className="relative border-b border-white/10 px-3 py-2 flex items-center">
                 <input
                   type="text"
@@ -178,14 +178,14 @@ export default function Navbar({ onSelectMedia, activeTab = 'explore', onNavigat
                   <button
                     type="button"
                     onClick={handleClearQuery}
-                    className="absolute right-3 text-xs text-gray-400 hover:text-white"
+                    className="absolute right-3 text-xs text-gray-400 hover:text-white cursor-pointer"
                   >
                     ✕
                   </button>
                 )}
               </div>
 
-              <div className="max-h-72 overflow-y-auto divide-y divide-white/5">
+              <div className="max-h-72 overflow-y-auto divide-y divide-white/5 [scrollbar-width:none]">
                 {isLoading && (
                   <div className="px-3 py-2 text-xs text-gray-300">Searching TMDB...</div>
                 )}
@@ -203,7 +203,7 @@ export default function Navbar({ onSelectMedia, activeTab = 'explore', onNavigat
                     <button
                       key={item.id}
                       type="button"
-                      className="flex w-full items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm text-white hover:bg-white/10 transition-colors"
+                      className="flex w-full items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm text-white hover:bg-white/10 transition-colors cursor-pointer"
                       onClick={() => handleSelectResult(item)}
                     >
                       {item.poster ? (

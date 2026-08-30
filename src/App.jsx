@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar';
 import HeroCarousel from './components/HeroCarousel';
 import LatestSidebar from './components/LatestSidebar';
 import MediaRow from './components/MediaRow';
-import MoviesPage from './components/MoviesPage';
+import MoviesPage from './components/moviespage';
+import SeriesPage from './components/seriespage';
 import { fetchTmdb, getTmdbApiKey, getTmdbPosterUrl, setTmdbApiKey } from './lib/tmdb';
 
 const FALLBACK_HERO_ITEMS = [
@@ -47,6 +48,7 @@ export default function App() {
   const [topRated, setTopRated] = useState([]);
   const [sidebarSeries, setSidebarSeries] = useState(FALLBACK_SERIES);
   const [sidebarMovies, setSidebarMovies] = useState(FALLBACK_MOVIES);
+  const [selectedMedia, setSelectedMedia] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -133,9 +135,14 @@ export default function App() {
     setApiKey(nextKey);
   };
 
+  const handleSelectMedia = (item) => {
+    setSelectedMedia(item);
+    // Add custom modal or player logic here
+  };
+
   return (
     <div className="min-h-screen bg-[#080A0F] text-white pt-28 px-6 md:px-12 pb-16 space-y-10 w-full max-w-[1700px] mx-auto">
-      <Navbar activeTab={activeTab} onNavigate={setActiveTab} />
+      <Navbar activeTab={activeTab} onNavigate={setActiveTab} onSelectMedia={handleSelectMedia} />
 
       {activeTab === 'explore' && (
         <>
@@ -158,7 +165,7 @@ export default function App() {
               />
               <button
                 type="submit"
-                className="rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
+                className="rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors cursor-pointer"
               >
                 Save Key
               </button>
@@ -192,7 +199,9 @@ export default function App() {
         </>
       )}
 
-      {activeTab === 'movies' && <MoviesPage />}
+      {activeTab === 'movies' && <MoviesPage onSelectMedia={handleSelectMedia} />}
+      
+      {activeTab === 'series' && <SeriesPage onSelectMedia={handleSelectMedia} />}
     </div>
   );
 }
