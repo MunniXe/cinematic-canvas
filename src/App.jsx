@@ -5,7 +5,8 @@ import LatestSidebar from './components/LatestSidebar';
 import MediaRow from './components/MediaRow';
 import MoviesPage from './components/moviespage';
 import SeriesPage from './components/seriespage';
-import { fetchTmdb, getTmdbApiKey, getTmdbPosterUrl, setTmdbApiKey } from './lib/tmdb';
+import LivePage from './components/livepage';
+import { fetchTmdb, getTmdbApiKey, getTmdbPosterUrl } from './lib/tmdb';
 
 const FALLBACK_HERO_ITEMS = [
   {
@@ -41,7 +42,6 @@ const FALLBACK_MOVIES = [
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('explore');
-  const [apiKey, setApiKey] = useState(getTmdbApiKey());
   const [heroItems, setHeroItems] = useState(FALLBACK_HERO_ITEMS);
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [popularSeries, setPopularSeries] = useState([]);
@@ -53,6 +53,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    const apiKey = getTmdbApiKey();
+
     if (!apiKey) {
       setHeroItems(FALLBACK_HERO_ITEMS);
       setTrendingMovies([]);
@@ -127,17 +129,10 @@ export default function App() {
     };
 
     loadAllDashboardData();
-  }, [apiKey]);
-
-  const handleSaveApiKey = (event) => {
-    event.preventDefault();
-    const nextKey = setTmdbApiKey(apiKey);
-    setApiKey(nextKey);
-  };
+  }, []);
 
   const handleSelectMedia = (item) => {
     setSelectedMedia(item);
-    // Add custom modal or player logic here
   };
 
   return (
@@ -146,32 +141,6 @@ export default function App() {
 
       {activeTab === 'explore' && (
         <>
-          <form onSubmit={handleSaveApiKey} className="rounded-2xl border border-white/10 bg-white/5 p-4 md:p-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-400">TMDB API Connection</p>
-              <label htmlFor="tmdb-key" className="mt-1 block text-sm text-gray-200">
-                Paste your v3 API Key or v4 Bearer Token
-              </label>
-            </div>
-
-            <div className="flex w-full max-w-xl gap-3">
-              <input
-                id="tmdb-key"
-                type="password"
-                value={apiKey}
-                onChange={(event) => setApiKey(event.target.value)}
-                placeholder="Paste TMDB key or token"
-                className="w-full rounded-xl border border-white/10 bg-[#0F172A] px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors cursor-pointer"
-              >
-                Save Key
-              </button>
-            </div>
-          </form>
-
           {error && (
             <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
               {error}
@@ -202,6 +171,8 @@ export default function App() {
       {activeTab === 'movies' && <MoviesPage onSelectMedia={handleSelectMedia} />}
       
       {activeTab === 'series' && <SeriesPage onSelectMedia={handleSelectMedia} />}
+
+      {activeTab === 'live' && <LivePage />}
     </div>
   );
 }
