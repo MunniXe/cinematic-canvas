@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './components/navbar';
-import HeroCarousel from './components/heroCarousel';
-import LatestSidebar from './components/latestSidebar';
-import MediaRow from './components/mediaRow';
+import HeroCarousel from './components/herocarousel';
+import LatestSidebar from './components/latestsidebar';
+import MediaRow from './components/mediarow';
 import MoviesPage from './components/moviespage';
 import SeriesPage from './components/seriespage';
 import LivePage from './components/livepage';
