@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import HeroCarousel from './components/HeroCarousel';
 import LatestSidebar from './components/LatestSidebar';
 import MediaRow from './components/MediaRow';
+import MoviesPage from './components/MoviesPage';
 import { fetchTmdb, getTmdbApiKey, getTmdbPosterUrl, setTmdbApiKey } from './lib/tmdb';
 
 const FALLBACK_HERO_ITEMS = [
@@ -38,6 +39,7 @@ const FALLBACK_MOVIES = [
 ];
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState('explore');
   const [apiKey, setApiKey] = useState(getTmdbApiKey());
   const [heroItems, setHeroItems] = useState(FALLBACK_HERO_ITEMS);
   const [trendingMovies, setTrendingMovies] = useState([]);
@@ -133,58 +135,64 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#080A0F] text-white pt-28 px-6 md:px-12 pb-16 space-y-10 w-full max-w-[1700px] mx-auto">
-      <Navbar />
+      <Navbar activeTab={activeTab} onNavigate={setActiveTab} />
 
-      <form onSubmit={handleSaveApiKey} className="rounded-2xl border border-white/10 bg-white/5 p-4 md:p-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-gray-400">TMDB API Connection</p>
-          <label htmlFor="tmdb-key" className="mt-1 block text-sm text-gray-200">
-            Paste your v3 API Key or v4 Bearer Token
-          </label>
-        </div>
+      {activeTab === 'explore' && (
+        <>
+          <form onSubmit={handleSaveApiKey} className="rounded-2xl border border-white/10 bg-white/5 p-4 md:p-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-gray-400">TMDB API Connection</p>
+              <label htmlFor="tmdb-key" className="mt-1 block text-sm text-gray-200">
+                Paste your v3 API Key or v4 Bearer Token
+              </label>
+            </div>
 
-        <div className="flex w-full max-w-xl gap-3">
-          <input
-            id="tmdb-key"
-            type="password"
-            value={apiKey}
-            onChange={(event) => setApiKey(event.target.value)}
-            placeholder="Paste TMDB key or token"
-            className="w-full rounded-xl border border-white/10 bg-[#0F172A] px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
-          >
-            Save Key
-          </button>
-        </div>
-      </form>
+            <div className="flex w-full max-w-xl gap-3">
+              <input
+                id="tmdb-key"
+                type="password"
+                value={apiKey}
+                onChange={(event) => setApiKey(event.target.value)}
+                placeholder="Paste TMDB key or token"
+                className="w-full rounded-xl border border-white/10 bg-[#0F172A] px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
+              >
+                Save Key
+              </button>
+            </div>
+          </form>
 
-      {error && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-          {error}
-        </div>
+          {error && (
+            <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              {error}
+            </div>
+          )}
+
+          {isLoading && !heroItems.length && (
+            <div className="text-sm text-gray-300">Loading TMDB dashboard data...</div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+            <div className="lg:col-span-3">
+              <HeroCarousel items={heroItems} />
+            </div>
+            <div className="lg:col-span-1">
+              <LatestSidebar seriesItems={sidebarSeries} movieItems={sidebarMovies} />
+            </div>
+          </div>
+
+          <div className="space-y-8">
+            <MediaRow title="Trending Movies" items={trendingMovies} />
+            <MediaRow title="Popular TV Series" items={popularSeries} />
+            <MediaRow title="Top Rated Classics" items={topRated} />
+          </div>
+        </>
       )}
 
-      {isLoading && !heroItems.length && (
-        <div className="text-sm text-gray-300">Loading TMDB dashboard data...</div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-        <div className="lg:col-span-3">
-          <HeroCarousel items={heroItems} />
-        </div>
-        <div className="lg:col-span-1">
-          <LatestSidebar seriesItems={sidebarSeries} movieItems={sidebarMovies} />
-        </div>
-      </div>
-
-      <div className="space-y-8">
-        <MediaRow title="Trending Movies" items={trendingMovies} />
-        <MediaRow title="Popular TV Series" items={popularSeries} />
-        <MediaRow title="Top Rated Classics" items={topRated} />
-      </div>
+      {activeTab === 'movies' && <MoviesPage />}
     </div>
   );
 }
