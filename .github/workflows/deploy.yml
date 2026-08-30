@@ -34,7 +34,7 @@ jobs:
 
       - name: Build project
         env:
-            VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+            VITE_TMDB_API_KEY: ${{secrets.VITE_TMDB_API_KEY}}
         run: npm run build
 
       - name: Upload artifact
