@@ -35,24 +35,26 @@ function GlassDropdown({ label, options, value, onChange }) {
 
       {/* Floating Menu - Matches Navbar Search Menu Glass */}
       {isOpen && (
-        <div className="absolute right-0 top-11 min-w-[180px] py-2 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/15 shadow-2xl ring-1 ring-white/10 z-[100] max-h-60 overflow-y-auto space-y-0.5 [scrollbar-width:none]">
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-              className={`w-full text-left px-4 py-2 text-xs sm:text-sm transition-colors ${
-                String(value) === String(option.value)
-                  ? 'bg-white/20 text-white font-semibold'
-                  : 'text-gray-300 hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="absolute right-0 top-11 w-[280px] sm:w-[320px] rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-2xl overflow-hidden z-[100]">
+          <div className="max-h-60 overflow-y-auto space-y-0.5 py-2 [scrollbar-width:none]">
+            {options.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-xs sm:text-sm transition-colors ${
+                  String(value) === String(option.value)
+                    ? 'bg-white/20 text-white font-semibold'
+                    : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>

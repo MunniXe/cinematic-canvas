@@ -66,6 +66,8 @@ export default function HeroCarousel({ items = FEATURED_ITEMS }) {
 
   const trimmedSynopsis = synopsis.length > 180 ? `${synopsis.slice(0, 177).trim()}...` : synopsis;
 
+  const posterUrl = current?.posterUrl || current?.coverUrl || current?.image || (current?.poster_path ? `https://image.tmdb.org/t/p/w500${current.poster_path}` : 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=500');
+
 
 
   const handlePrev = () => {
@@ -86,17 +88,15 @@ export default function HeroCarousel({ items = FEATURED_ITEMS }) {
 
   return (
 
-    <div className="relative w-full rounded-3xl p-6 md:p-10 bg-white/5 backdrop-blur-2xl border border-white/10 overflow-hidden shadow-2xl">
-
-      <div className={`absolute -inset-10 bg-gradient-to-r ${current.ambientGlow || 'from-blue-600/30 via-purple-600/20 to-pink-600/30'} blur-3xl opacity-50 pointer-events-none transition-all duration-700`} />
+    <div className="relative w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl sm:p-6 md:p-10">
 
 
 
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="relative z-10 flex flex-row items-center justify-between gap-3 sm:gap-6 md:gap-8">
 
-        <div className="flex-1 space-y-4 text-left min-h-[260px] flex flex-col justify-center">
+        <div className="min-w-0 flex-1 space-y-2 text-left sm:space-y-4">
 
-          <div className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-semibold text-gray-300">
+          <div className="inline-block rounded-full bg-white/10 px-2 py-1 text-[9px] font-semibold text-gray-300 sm:px-3 sm:text-xs">
 
             {current.genre} • {current.year}
 
@@ -104,7 +104,7 @@ export default function HeroCarousel({ items = FEATURED_ITEMS }) {
 
 
 
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white uppercase leading-none line-clamp-2">
+          <h1 className="line-clamp-2 text-xl font-black uppercase leading-tight tracking-tight text-white sm:text-3xl md:text-6xl">
 
             {current.title}
 
@@ -112,17 +112,16 @@ export default function HeroCarousel({ items = FEATURED_ITEMS }) {
 
 
 
-          <p className="text-sm md:text-base text-gray-300 max-w-lg leading-relaxed min-h-[72px]">
+          <p className="line-clamp-4 min-h-0 max-w-lg text-[11px] leading-5 text-gray-300 sm:min-h-[72px] sm:text-sm sm:leading-relaxed md:text-base">
 
             {trimmedSynopsis}
 
           </p>
 
 
+          <div className="flex items-center gap-2 pt-1 sm:gap-4 sm:pt-2">
 
-          <div className="flex items-center gap-4 pt-2">
-
-            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition-all">
+            <button className="flex items-center gap-1 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-all hover:bg-gray-200 sm:gap-2 sm:px-6 sm:py-3 sm:text-base">
 
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
 
@@ -130,7 +129,7 @@ export default function HeroCarousel({ items = FEATURED_ITEMS }) {
 
             </button>
 
-            <button className="p-3 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all">
+            <button className="rounded-full border border-white/20 bg-white/10 p-2 text-white transition-all hover:bg-white/20 sm:p-3">
 
               <svg className="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
 
@@ -142,9 +141,9 @@ export default function HeroCarousel({ items = FEATURED_ITEMS }) {
 
 
 
-        <div className="relative w-44 md:w-52 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex-shrink-0">
+        <div className="relative w-28 shrink-0 aspect-[2/3] overflow-hidden rounded-xl border border-white/10 shadow-2xl sm:w-40 sm:rounded-2xl md:w-52">
 
-          <img src={current.coverUrl} alt={current.title} className="w-full h-full object-cover" />
+          <img src={posterUrl} alt={current.title} className="w-full h-full object-cover" />
 
         </div>
 

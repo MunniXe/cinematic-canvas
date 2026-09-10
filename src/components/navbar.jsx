@@ -164,7 +164,7 @@ export default function Navbar({ onSelectMedia, activeTab = 'explore', onNavigat
           </button>
 
           {isOpen && (
-            <div className="absolute right-0 top-10 sm:top-11 w-[280px] sm:w-[320px] rounded-2xl bg-black/60 backdrop-blur-xl border border-white/15 shadow-2xl ring-1 ring-white/10 overflow-hidden z-[100]">
+            <div className="absolute right-0 top-10 sm:top-11 w-[280px] sm:w-[320px] rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-2xl overflow-hidden z-[100]">
               <div className="relative border-b border-white/10 px-3 py-2 flex items-center">
                 <input
                   type="text"

@@ -1,13 +1,18 @@
 import React from 'react';
 
-export default function MediaRow({ title, items, showProgress = false }) {
+export default function MediaRow({ title, items, showProgress = false, onSelectMedia }) {
   return (
     <section className="space-y-3">
       <h3 className="text-lg font-bold tracking-wide text-white uppercase text-left">{title}</h3>
 
       <div className="flex items-center gap-4 overflow-x-auto py-4 px-1 scrollbar-hide">
         {items.map((item) => (
-          <div key={item.id} className="relative flex-shrink-0 w-44 md:w-52 group cursor-pointer hover:z-20">
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onSelectMedia?.(item)}
+            className="relative flex-shrink-0 w-44 md:w-52 group cursor-pointer hover:z-20 text-left"
+          >
             <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-white/5 border border-white/10 transition-transform duration-300 group-hover:scale-105">
               <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
 
@@ -25,7 +30,7 @@ export default function MediaRow({ title, items, showProgress = false }) {
             )}
 
             <p className="mt-2 text-sm font-medium text-gray-200 truncate text-left">{item.title}</p>
-          </div>
+          </button>
         ))}
       </div>
     </section>

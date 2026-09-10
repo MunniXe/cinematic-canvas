@@ -6,6 +6,7 @@ import MediaRow from './components/mediarow';
 import MoviesPage from './components/moviespage';
 import SeriesPage from './components/seriespage';
 import LivePage from './components/livepage';
+import WatchPage from './components/watchpage';
 import { fetchTmdb, getTmdbApiKey, getTmdbPosterUrl } from './lib/tmdb';
 
 const FALLBACK_HERO_ITEMS = [
@@ -92,6 +93,7 @@ export default function App() {
           genre: item.genre_ids?.[0] ? `TMDB ${item.genre_ids[0]}` : 'MOVIE',
           year: (item.release_date || item.first_air_date || '2026').slice(0, 4),
           synopsis: item.overview || 'No synopsis available.',
+          posterUrl: getTmdbPosterUrl(item.poster_path, 'w500'),
           coverUrl: getTmdbPosterUrl(item.poster_path, 'w780'),
           ambientGlow: 'from-blue-600/30 via-purple-600/20 to-pink-600/30',
         }));
@@ -133,11 +135,25 @@ export default function App() {
 
   const handleSelectMedia = (item) => {
     setSelectedMedia(item);
+    setActiveTab('watch');
+  };
+
+  const handleBackFromWatch = () => {
+    setActiveTab('explore');
+    setSelectedMedia(null);
   };
 
   return (
     <div className="min-h-screen bg-[#080A0F] text-white pt-28 px-6 md:px-12 pb-16 space-y-10 w-full max-w-[1700px] mx-auto">
       <Navbar activeTab={activeTab} onNavigate={setActiveTab} onSelectMedia={handleSelectMedia} />
+
+      {activeTab === 'watch' && (
+        <WatchPage
+          media={selectedMedia}
+          onBack={handleBackFromWatch}
+          onSelectMedia={handleSelectMedia}
+        />
+      )}
 
       {activeTab === 'explore' && (
         <>
@@ -161,9 +177,9 @@ export default function App() {
           </div>
 
           <div className="space-y-8">
-            <MediaRow title="Trending Movies" items={trendingMovies} />
-            <MediaRow title="Popular TV Series" items={popularSeries} />
-            <MediaRow title="Top Rated Classics" items={topRated} />
+            <MediaRow title="Trending Movies" items={trendingMovies} onSelectMedia={handleSelectMedia} />
+            <MediaRow title="Popular TV Series" items={popularSeries} onSelectMedia={handleSelectMedia} />
+            <MediaRow title="Top Rated Classics" items={topRated} onSelectMedia={handleSelectMedia} />
           </div>
         </>
       )}
