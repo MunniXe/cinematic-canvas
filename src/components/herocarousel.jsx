@@ -44,7 +44,7 @@ const FEATURED_ITEMS = [
 
 
 
-export default function HeroCarousel({ items = FEATURED_ITEMS }) {
+export default function HeroCarousel({ items = FEATURED_ITEMS, onSelectMedia }) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -121,7 +121,11 @@ export default function HeroCarousel({ items = FEATURED_ITEMS }) {
 
           <div className="flex items-center gap-2 pt-1 sm:gap-4 sm:pt-2">
 
-            <button className="flex items-center gap-1 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-all hover:bg-gray-200 sm:gap-2 sm:px-6 sm:py-3 sm:text-base">
+            <button
+              type="button"
+              onClick={() => onSelectMedia?.({ ...current, media_type: current.media_type || 'movie' })}
+              className="flex items-center gap-1 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-all hover:bg-gray-200 sm:gap-2 sm:px-6 sm:py-3 sm:text-base"
+            >
 
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
 

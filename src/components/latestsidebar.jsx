@@ -11,7 +11,7 @@ const LATEST_MOVIES = [
   { id: 2, title: 'Cosmic Drift', sub: '1h 48m • Action', tag: '2 days ago', img: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=150' },
 ];
 
-export default function LatestSidebar({ seriesItems = LATEST_SERIES, movieItems = LATEST_MOVIES }) {
+export default function LatestSidebar({ seriesItems = LATEST_SERIES, movieItems = LATEST_MOVIES, onSelectMedia }) {
   const [activeTab, setActiveTab] = useState('series');
   const items = activeTab === 'series' ? (seriesItems?.length ? seriesItems : LATEST_SERIES) : (movieItems?.length ? movieItems : LATEST_MOVIES);
 
@@ -38,14 +38,19 @@ export default function LatestSidebar({ seriesItems = LATEST_SERIES, movieItems 
 
       <div className="space-y-3">
         {items.map((item) => (
-          <div key={item.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer group">
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onSelectMedia?.({ ...item, media_type: item.media_type || (activeTab === 'series' ? 'tv' : 'movie') })}
+            className="flex w-full items-center gap-3 rounded-xl p-2 text-left hover:bg-white/5 cursor-pointer group"
+          >
             <img src={item.img} alt={item.title} className="w-12 aspect-[2/3] rounded-lg object-cover group-hover:scale-105 transition-transform" />
             <div className="flex-1 min-w-0 text-left">
               <h4 className="text-sm font-medium text-white truncate">{item.title}</h4>
               <p className="text-xs text-gray-400">{item.sub}</p>
             </div>
             <span className="text-[10px] bg-white/10 text-gray-300 px-2 py-1 rounded-md">{item.tag}</span>
-          </div>
+          </button>
         ))}
       </div>
     </aside>

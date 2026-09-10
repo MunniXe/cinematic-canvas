@@ -99,16 +99,20 @@ export default function App() {
         }));
 
         const mappedSeries = (seriesData.results || []).slice(0, 3).map((item) => ({
+          ...item,
           id: item.id,
           title: item.name,
+          media_type: 'tv',
           sub: `${item.first_air_date ? item.first_air_date.slice(0, 4) : 'TV'} • ${item.vote_average?.toFixed(1) || 'N/A'}`,
           tag: 'Live',
           img: getTmdbPosterUrl(item.poster_path),
         }));
 
         const mappedMovies = (topData.results || []).slice(0, 3).map((item) => ({
+          ...item,
           id: item.id,
           title: item.title,
+          media_type: 'movie',
           sub: `${item.release_date ? item.release_date.slice(0, 4) : 'N/A'} • ${Number(item.vote_average || 0).toFixed(1)}`,
           tag: 'Top',
           img: getTmdbPosterUrl(item.poster_path),
@@ -169,10 +173,10 @@ export default function App() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
             <div className="lg:col-span-3">
-              <HeroCarousel items={heroItems} />
+              <HeroCarousel items={heroItems} onSelectMedia={handleSelectMedia} />
             </div>
             <div className="lg:col-span-1">
-              <LatestSidebar seriesItems={sidebarSeries} movieItems={sidebarMovies} />
+              <LatestSidebar seriesItems={sidebarSeries} movieItems={sidebarMovies} onSelectMedia={handleSelectMedia} />
             </div>
           </div>
 
