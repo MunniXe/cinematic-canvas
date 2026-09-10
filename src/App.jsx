@@ -192,7 +192,7 @@ export default function App() {
       
       {activeTab === 'series' && <SeriesPage onSelectMedia={handleSelectMedia} />}
 
-      {activeTab === 'live' && <LivePage />}
+      {activeTab === 'live' && <LivePage onSelectMedia={handleSelectMedia} />}
     </div>
   );
 }

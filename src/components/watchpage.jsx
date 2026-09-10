@@ -71,15 +71,27 @@ export default function WatchPage({ media, onBack, onSelectMedia }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const mediaType = media?.media_type === 'tv' || media?.name ? 'tv' : 'movie';
+  const mediaType = media?.media_type === 'live'
+  ? 'live'
+  : media?.media_type === 'tv' || media?.name
+    ? 'tv'
+    : 'movie';
   const title = details?.title || details?.name || 'Untitled';
-  const embedUrl = details?.id
+  const embedUrl = mediaType === 'live'
+  ? details?.videoId
+    ? `https://www.youtube.com/embed/${details.videoId}?autoplay=1`
+    : ''
+  : details?.id
     ? mediaType === 'tv'
       ? `https://vidsrc.me/embed/tv?tmdb=${details.id}&season=${selectedSeason}&episode=${selectedEpisode}`
       : `https://vidsrc.me/embed/movie?tmdb=${details.id}`
     : '';
-  const posterUrl = getTmdbPosterUrl(details?.poster_path, 'w500');
-  const backdropUrl = details?.backdrop_path
+  const posterUrl = mediaType === 'live'
+  ? details?.thumbnail || 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500'
+  : getTmdbPosterUrl(details?.poster_path, 'w500');
+  const backdropUrl = mediaType === 'live'
+  ? details?.thumbnail || posterUrl
+  : details?.backdrop_path
     ? getTmdbPosterUrl(details.backdrop_path, 'w1280')
     : posterUrl;
 
@@ -87,11 +99,18 @@ export default function WatchPage({ media, onBack, onSelectMedia }) {
     let isCurrent = true;
 
     const loadWatchData = async () => {
-      const apiKey = getTmdbApiKey();
-      if (!apiKey || !media?.id) {
-        setIsLoading(false);
-        return;
-      }
+      if (media?.media_type === 'live') {
+  setDetails(media);
+  setSimilar([]);
+  setIsLoading(false);
+  return;
+}
+
+const apiKey = getTmdbApiKey();
+if (!apiKey || !media?.id) {
+  setIsLoading(false);
+  return;
+}
 
       try {
         setIsLoading(true);
@@ -204,14 +223,29 @@ export default function WatchPage({ media, onBack, onSelectMedia }) {
 
           <div className="min-w-0 text-left md:flex md:flex-col md:justify-center">
             <p className="text-[9px] uppercase tracking-[0.12em] text-gray-400 sm:text-xs sm:tracking-[0.2em]">
-              {mediaType === 'tv' ? 'TV Series' : 'Movie'} {year && `• ${year}`}
+              {mediaType === 'live'
+                 ? 'LIVE'
+                 : mediaType === 'tv'
+                  ? 'TV Series'
+                  : 'Movie'}{' '}
+              {mediaType !== 'live' && year && `• ${year}`}
             </p>
             <h1 className="mt-1 line-clamp-2 text-lg font-black uppercase leading-tight tracking-tight text-white sm:text-2xl md:mt-3 md:text-5xl">{title}</h1>
             <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-[10px] text-gray-300 sm:mt-4 sm:gap-3 sm:text-sm">
-              <span>★ {details?.vote_average ? Number(details.vote_average).toFixed(1) : 'N/A'}</span>
-              {genres && <span>{genres}</span>}
-              {mediaType === 'movie' && <span>{formatRuntime(details?.runtime)}</span>}
-              {mediaType === 'tv' && details?.number_of_seasons && <span>{details.number_of_seasons} seasons</span>}
+              {mediaType !== 'live' && (
+               <>
+                 <span>★ {details?.vote_average ? Number(details.vote_average).toFixed(1) : 'N/A'}</span>
+                  {genres && <span>{genres}</span>}
+                  {mediaType === 'movie' && <span>{formatRuntime(details?.runtime)}</span>}
+                  {mediaType === 'tv' && details?.number_of_seasons && (
+                    <span>{details.number_of_seasons} seasons</span>
+                  )}
+                </>
+              )}
+
+               {mediaType === 'live' && details?.channel && (
+                 <span>{details.channel}</span>
+               )}
             </div>
             <p className="mt-3 line-clamp-4 max-w-2xl text-[11px] leading-5 text-gray-300 sm:mt-5 sm:text-sm sm:leading-7">
               {details?.overview || 'No description is available for this title.'}
@@ -227,7 +261,7 @@ export default function WatchPage({ media, onBack, onSelectMedia }) {
       )}
 
       {isLoading && <p className="text-left text-sm text-gray-400">Loading title details...</p>}
-
+     {mediaType !== 'live' && (
       <section className="space-y-3">
         <h2 className="text-left text-lg font-bold uppercase tracking-wide text-white">Similar Films & Shows</h2>
         {similarItems.length ? (
@@ -254,6 +288,7 @@ export default function WatchPage({ media, onBack, onSelectMedia }) {
           <p className="text-left text-sm text-gray-400">Similar titles will appear here.</p>
         )}
       </section>
+     )}
     </main>
   );
 }
